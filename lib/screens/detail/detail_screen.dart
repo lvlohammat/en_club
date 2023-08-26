@@ -1,16 +1,16 @@
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:english_club/helpers/audio_helper.dart';
 import 'package:english_club/providers/english_items.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:rxdart/rxdart.dart';
 
 import '../../components/html_viewer.dart';
 import '../../components/item_tile.dart';
 import '../../constants.dart';
-import '../../helpers/position_data.dart';
+import 'components/custom_play_button.dart';
 
 class DetailScreen extends StatefulWidget {
   static const routeName = '/detail';
@@ -22,24 +22,13 @@ class DetailScreen extends StatefulWidget {
 
 class _DetailScreenState extends State<DetailScreen> {
   int selectedIndex = 0;
-  late AudioPlayer _audioPlayer;
-
-  Stream<PositionData> get _positionDataStream =>
-      Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
-        _audioPlayer.positionStream,
-        _audioPlayer.bufferedPositionStream,
-        _audioPlayer.durationStream,
-        (position, bufferedPosition, duration) => PositionData(
-            position: position,
-            bufferedPosition: bufferedPosition,
-            duration: duration ?? Duration.zero),
-      );
+  late final AudioHelper _audioPlayer;
 
   @override
   void initState() {
     super.initState();
     final playerItem = context.read<EnglishItems>().playerItem;
-    _audioPlayer = AudioPlayer()..setUrl(playerItem!.audioUrl!);
+    _audioPlayer = AudioHelper(playerItem!.audioUrl!);
   }
 
   @override
@@ -50,8 +39,11 @@ class _DetailScreenState extends State<DetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final EnglishItem item =
-        ModalRoute.of(context)?.settings.arguments as EnglishItem;
+    final Map<String, dynamic> recivedItemDatas =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final item = context
+        .read<EnglishItems>()
+        .findById(recivedItemDatas['id'], recivedItemDatas['isSaved']);
 
     return Scaffold(
       body: CustomScrollView(
@@ -83,31 +75,8 @@ class _DetailScreenState extends State<DetailScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      StreamBuilder<PlayerState>(
-                        stream: _audioPlayer.playerStateStream,
-                        builder: (context, snapshot) {
-                          final playerState = snapshot.data;
-                          final processingState = playerState?.processingState;
-                          final playing = playerState?.playing;
-                          if (!(playing ?? false)) {
-                            return ElevatedButton.icon(
-                                onPressed: _audioPlayer.play,
-                                icon: const Icon(
-                                    Icons.play_circle_outline_rounded),
-                                label: const Text('Play'));
-                          } else if (processingState ==
-                              ProcessingState.completed) {
-                            return ElevatedButton(
-                                onPressed: () {},
-                                child: const Icon(Icons.check_circle));
-                          }
-                          return ElevatedButton.icon(
-                              onPressed: _audioPlayer.pause,
-                              icon: const Icon(
-                                  Icons.pause_circle_outline_rounded),
-                              label: const Text('Playing'));
-                        },
-                      ),
+                      CustomPlayButton(
+                          audioPlayer: _audioPlayer, isShorten: false),
                       CupertinoSlidingSegmentedControl(
                         backgroundColor: kDarkColorScheme.surface,
                         thumbColor:
@@ -147,6 +116,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     boldColor: kDarkColorScheme.primary,
                   ),
                 ),
+                kDefaultVerticalSizedBox,
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 1),
                   padding:
@@ -169,10 +139,27 @@ class _DetailScreenState extends State<DetailScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: kDarkColorScheme.secondaryContainer,
         onPressed: () {
           showPreviewPlayer(context, item);
         },
-        child: const Icon(Icons.remove_red_eye_sharp),
+        child: ValueListenableBuilder<ButtonState>(
+          valueListenable: _audioPlayer.buttonNotifier,
+          builder: (context, value, child) {
+            switch (value) {
+              case ButtonState.paused:
+                return Lottie.asset(
+                  'assets/lottie/playing.json',
+                  animate: false,
+                  reverse: true,
+                );
+              case ButtonState.playing:
+                return Lottie.asset('assets/lottie/playing.json');
+              case ButtonState.loading:
+                return const CircularProgressIndicator();
+            }
+          },
+        ),
       ),
     );
   }
@@ -214,20 +201,15 @@ class _DetailScreenState extends State<DetailScreen> {
             style: TextStyle(
                 color: kDarkColorScheme.onSurface, fontWeight: FontWeight.w300),
           ),
-          StreamBuilder<PositionData>(
-            stream: _positionDataStream,
-            builder: (context, snapshot) {
-              final positionData = snapshot.data;
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: ProgressBar(
-                  progress: positionData?.position ?? Duration.zero,
-                  total: positionData?.duration ?? Duration.zero,
-                  buffered: positionData?.bufferedPosition ?? Duration.zero,
-                  onSeek: _audioPlayer.seek,
-                ),
-              );
-            },
+          ValueListenableBuilder<ProgressBarState>(
+            valueListenable: _audioPlayer.progressNotifier,
+            builder: (context, value, child) => ProgressBar(
+              progress: value.current,
+              total: value.total,
+              buffered: value.buffered,
+              timeLabelLocation: TimeLabelLocation.sides,
+              onSeek: _audioPlayer.seek,
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -241,36 +223,9 @@ class _DetailScreenState extends State<DetailScreen> {
                   size: 30,
                 ),
               ),
-              StreamBuilder<PlayerState>(
-                stream: _audioPlayer.playerStateStream,
-                builder: (context, snapshot) {
-                  final playerState = snapshot.data;
-                  final processingState = playerState?.processingState;
-                  final playing = playerState?.playing;
-                  if (!(playing ?? false)) {
-                    return IconButton(
-                      onPressed: _audioPlayer.play,
-                      icon: const Icon(
-                        Icons.play_arrow_sharp,
-                        size: 30,
-                      ),
-                    );
-                  } else if (processingState == ProcessingState.completed) {
-                    return IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.check_circle,
-                          size: 30,
-                        ));
-                  }
-                  return IconButton(
-                    onPressed: _audioPlayer.pause,
-                    icon: const Icon(
-                      Icons.pause,
-                      size: 30,
-                    ),
-                  );
-                },
+              CustomPlayButton(
+                audioPlayer: _audioPlayer,
+                isShorten: true,
               ),
               IconButton(
                 onPressed: () {},

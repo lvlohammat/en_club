@@ -20,11 +20,16 @@ class ItemTile extends StatelessWidget {
       contentPadding: const EdgeInsets.all(0),
       leading: AspectRatio(
         aspectRatio: 1,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: CachedNetworkImage(
-            imageUrl: item.imageUrl!,
-            fit: BoxFit.cover,
+        child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: kDarkColorScheme.secondaryContainer.withOpacity(.5)),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: CachedNetworkImage(
+              imageUrl: item.imageUrl!,
+              fit: BoxFit.cover,
+            ),
           ),
         ),
       ),

@@ -2,14 +2,16 @@ import 'package:english_club/constants.dart';
 import 'package:english_club/helpers/back4app.dart';
 import 'package:english_club/providers/english_items.dart';
 import 'package:english_club/screens/detail/detail_screen.dart';
-import 'package:english_club/screens/home/home_screen.dart';
+import 'package:english_club/screens/initial/initial_screen.dart';
 import 'package:english_club/screens/items/items_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Back4App.init();
+  FlutterNativeSplash.remove();
   runApp(const MyApp());
 }
 
@@ -30,6 +32,8 @@ class MyApp extends StatelessWidget {
         themeMode: ThemeMode.dark,
         darkTheme: ThemeData.dark().copyWith(
           useMaterial3: true,
+          progressIndicatorTheme: ProgressIndicatorThemeData(
+              color: kDarkColorScheme.onSecondaryContainer),
           textTheme: const TextTheme().copyWith(
               bodyMedium: TextStyle(
                 fontSize: 16,
@@ -44,10 +48,11 @@ class MyApp extends StatelessWidget {
           ),
           colorScheme: kDarkColorScheme,
         ),
-        home: const HomeScreen(),
+        home: const InitialScreen(),
         routes: {
           DetailScreen.routeName: (context) => const DetailScreen(),
           ItemsScreen.routeName: (context) => const ItemsScreen(),
+          InitialScreen.routeName: (context) => const InitialScreen(),
         },
       ),
     );

@@ -14,13 +14,15 @@ class CustomSearch extends StatefulWidget {
 
 class _CustomSearchState extends State<CustomSearch> {
   String? searchText;
-  Iterable<Widget> getSuggestions(SearchController controller) {
+  Iterable<Widget> getSuggestions(
+      SearchController controller, List<EnglishItem> savedItems) {
     final String input = controller.value.text;
     return widget.items
         .where((item) => item.title!.toLowerCase().contains(input))
         .map((filteredItem) => ListTile(
               leading: CircleAvatar(
-                  child: CachedNetworkImage(imageUrl: filteredItem.imageUrl!)),
+                  backgroundImage:
+                      CachedNetworkImageProvider(filteredItem.imageUrl!)),
               title: Text(filteredItem.title!),
               trailing: IconButton(
                   icon: const Icon(Icons.arrow_forward_ios_rounded),
@@ -31,7 +33,10 @@ class _CustomSearchState extends State<CustomSearch> {
                   }),
               onTap: () {
                 Navigator.pushNamed(context, DetailScreen.routeName,
-                    arguments: filteredItem);
+                    arguments: {
+                      'id': filteredItem.id,
+                      'isSaved': savedItems.contains(filteredItem)
+                    });
                 context.read<EnglishItems>().changePlayerItem(filteredItem);
               },
             ));
@@ -39,13 +44,14 @@ class _CustomSearchState extends State<CustomSearch> {
 
   @override
   Widget build(BuildContext context) {
+    final savedItems = context.watch<EnglishItems>().savedItems;
     return SearchAnchor.bar(
       barHintText: 'Type to search',
       suggestionsBuilder: (context, controller) {
         if (controller.text.isEmpty) {
           return [''].map((e) => const Text(''));
         }
-        return getSuggestions(controller);
+        return getSuggestions(controller, savedItems);
       },
     );
   }

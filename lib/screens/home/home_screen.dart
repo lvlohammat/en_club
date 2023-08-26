@@ -1,4 +1,3 @@
-import 'package:english_club/components/custom_drawer.dart';
 import 'package:english_club/constants.dart';
 import 'package:english_club/screens/explore/explore_screen.dart';
 import 'package:english_club/screens/home/components/home_body.dart';
@@ -22,7 +21,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const CustomDrawer(),
       appBar: _currentIndex == 1
           ? null
           : AppBar(

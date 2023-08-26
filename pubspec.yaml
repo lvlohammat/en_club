@@ -44,6 +44,9 @@ dependencies:
   just_audio: ^0.9.34
   sqflite: ^2.3.0
   path: ^1.8.3
+  flutter_native_splash: ^2.3.2
+  lottie: ^2.6.0
+
 
 dev_dependencies:
   flutter_test:
@@ -68,8 +71,10 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    - assets/
+    - assets/images/
+    - assets/lottie/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

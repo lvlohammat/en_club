@@ -89,8 +89,12 @@ class EnglishItems with ChangeNotifier {
     notifyListeners();
   }
 
-  EnglishItem findById(String id) =>
-      _items.firstWhere((element) => element.id == id);
+  EnglishItem findById(String id, bool isSaved) {
+    if (isSaved) {
+      return _savedItems.firstWhere((element) => element.id == id);
+    }
+    return _items.firstWhere((element) => element.id == id);
+  }
 
   Future<void> fetchFiltredItems(tag) async {
     QueryBuilder<ParseObject> query = QueryBuilder(ParseObject('EnglishItems'));
@@ -185,7 +189,7 @@ String tagToString(Tag tag) {
     case Tag.everyday:
       return 'everyday';
     case Tag.business:
-      return 'business';
+      return 'Business';
 
     default:
       return 'business';

@@ -8,12 +8,17 @@ class ItemsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Map<String, dynamic> items =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+    final bool isSaved = items['title'] == 'Subscription' ? true : false;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(items['title']),
       ),
-      body: ItemsBody(items: items['items']),
+      body: ItemsBody(
+        items: items['items'],
+        isSaved: isSaved,
+      ),
     );
   }
 }

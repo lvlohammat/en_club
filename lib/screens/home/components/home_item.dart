@@ -13,18 +13,21 @@ class HomeItem extends StatelessWidget {
     required this.maxWidth,
     required this.maxHight,
     required this.item,
+    required this.isSaved,
   });
 
   final double maxWidth;
   final double maxHight;
   final EnglishItem item;
+  final bool? isSaved;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       splashColor: kDarkColorScheme.secondaryContainer,
       onTap: () {
-        Navigator.pushNamed(context, DetailScreen.routeName, arguments: item);
+        Navigator.pushNamed(context, DetailScreen.routeName,
+            arguments: {'id': item.id, 'isSaved': isSaved ?? false});
         context.read<EnglishItems>().changePlayerItem(item);
       },
       child: Column(
@@ -45,7 +48,7 @@ class HomeItem extends StatelessWidget {
               'body': Style(
                   margin: Margins.all(0),
                   fontSize: FontSize(16),
-                  maxLines: 3,
+                  maxLines: 2,
                   textOverflow: TextOverflow.ellipsis),
               'strong': Style(
                   margin: Margins.all(0),

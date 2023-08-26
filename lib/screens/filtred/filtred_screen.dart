@@ -1,9 +1,9 @@
 import 'package:english_club/providers/english_items.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-import '../../constants.dart';
-import '../detail/detail_screen.dart';
+import '../../components/custom_tile_view.dart';
 
 class FiltredScreen extends StatefulWidget {
   const FiltredScreen({
@@ -35,7 +35,10 @@ class _FiltredScreenState extends State<FiltredScreen> {
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
-              return const Center(child: CircularProgressIndicator());
+              return Center(
+                child: Lottie.asset('assets/lottie/cat.json',
+                    width: 100, height: 100, fit: BoxFit.contain),
+              );
             default:
               if (snapshot.hasError) {
                 return const Center(child: Text('Error'));
@@ -55,44 +58,11 @@ class _FiltredScreenState extends State<FiltredScreen> {
                               names[index], english.filtredItems);
                           return Padding(
                             padding: const EdgeInsets.symmetric(
-                                vertical: 2, horizontal: 2),
-                            child: ExpansionTile(
-                              backgroundColor: kDarkColorScheme
-                                  .secondaryContainer
-                                  .withOpacity(.5),
-                              collapsedBackgroundColor: kDarkColorScheme
-                                  .secondaryContainer
-                                  .withOpacity(.5),
-                              textColor: kDarkColorScheme.onSecondaryContainer,
-                              iconColor: kDarkColorScheme.onSecondaryContainer,
-                              collapsedShape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                              childrenPadding:
-                                  const EdgeInsets.symmetric(horizontal: 30),
-                              title: Text(
-                                names[index],
-                                style: const TextStyle(fontSize: 25),
-                              ),
-                              children: items
-                                  .map(
-                                    (item) => ListTile(
-                                      onTap: () {
-                                        Navigator.pushNamed(
-                                            context, DetailScreen.routeName,
-                                            arguments: item);
-                                        context
-                                            .read<EnglishItems>()
-                                            .changePlayerItem(item);
-                                      },
-                                      title: Text(
-                                        item.title!,
-                                        style: const TextStyle(fontSize: 18),
-                                      ),
-                                    ),
-                                  )
-                                  .toList(),
+                                vertical: 5, horizontal: 7),
+                            child: CustomTileView(
+                              names: names,
+                              items: items,
+                              index: index,
                             ),
                           );
                         },

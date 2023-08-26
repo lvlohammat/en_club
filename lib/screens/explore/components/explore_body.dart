@@ -27,8 +27,10 @@ class _ExploreBodyState extends State<ExploreBody> {
           )),
           kDefaultVerticalSizedBox,
           ExpansionTile(
-            backgroundColor: kDarkColorScheme.secondaryContainer,
-            collapsedBackgroundColor: kDarkColorScheme.secondaryContainer,
+            backgroundColor:
+                kDarkColorScheme.secondaryContainer.withOpacity(.5),
+            collapsedBackgroundColor:
+                kDarkColorScheme.secondaryContainer.withOpacity(.5),
             textColor: kDarkColorScheme.onSecondaryContainer,
             iconColor: kDarkColorScheme.onSecondaryContainer,
             collapsedShape:
