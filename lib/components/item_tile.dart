@@ -38,7 +38,8 @@ class ItemTile extends StatelessWidget {
         style: const TextStyle(fontSize: 16),
       ),
       subtitle: Text(
-        tagToString(item.tag!),
+        tagToString(item.tag!)[0].toUpperCase() +
+            tagToString(item.tag!).substring(1),
         style:
             TextStyle(fontSize: 14, color: kDarkColorScheme.onPrimaryContainer),
       ),

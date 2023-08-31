@@ -23,16 +23,16 @@ class LibraryBody extends StatelessWidget {
           ),
           trailing: const Icon(Icons.arrow_forward_ios_rounded),
         ),
-        const Divider(),
-        const ListTile(
-          leading: Icon(Icons.arrow_circle_down_rounded),
-          title: Text(
-            'Download',
-            style: TextStyle(fontSize: 22),
-          ),
-          trailing: Icon(Icons.arrow_forward_ios_rounded),
-        ),
-        const Divider()
+        // const Divider(),
+        // const ListTile(
+        //   leading: Icon(Icons.arrow_circle_down_rounded),
+        //   title: Text(
+        //     'Download',
+        //     style: TextStyle(fontSize: 22),
+        //   ),
+        //   trailing: Icon(Icons.arrow_forward_ios_rounded),
+        // ),
+        // const Divider()
       ],
     );
   }

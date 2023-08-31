@@ -44,7 +44,6 @@ dependencies:
   just_audio: ^0.9.34
   sqflite: ^2.3.0
   path: ^1.8.3
-  flutter_native_splash: ^2.3.2
   lottie: ^2.6.0
 
 

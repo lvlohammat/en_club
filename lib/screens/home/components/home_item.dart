@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import '../../../components/item_tile.dart';
 import '../../../constants.dart';
 
-class HomeItem extends StatelessWidget {
+class HomeItem extends StatefulWidget {
   const HomeItem({
     super.key,
     required this.maxWidth,
@@ -22,28 +22,47 @@ class HomeItem extends StatelessWidget {
   final bool? isSaved;
 
   @override
+  State<HomeItem> createState() => _HomeItemState();
+}
+
+class _HomeItemState extends State<HomeItem> {
+  late String title;
+  @override
+  void initState() {
+    super.initState();
+    final extractedTitle = widget.item.title!;
+    if (extractedTitle.contains(widget.item.name!)) {
+      title = extractedTitle.split('${widget.item.name!}: ')[1];
+    } else {
+      title = 'Part ${widget.item.episode}: $extractedTitle';
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return InkWell(
       splashColor: kDarkColorScheme.secondaryContainer,
       onTap: () {
-        Navigator.pushNamed(context, DetailScreen.routeName,
-            arguments: {'id': item.id, 'isSaved': isSaved ?? false});
-        context.read<EnglishItems>().changePlayerItem(item);
+        Navigator.pushNamed(context, DetailScreen.routeName, arguments: {
+          'id': widget.item.id,
+          'isSaved': widget.isSaved ?? false
+        });
+        context.read<EnglishItems>().changePlayerItem(widget.item);
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ItemTile(item: item),
+          ItemTile(item: widget.item),
           kDefaultVerticalSizedBox,
           Text(
-            item.title!,
+            title,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
           ),
           Html(
-            data: item.story!,
+            data: widget.item.story!,
             style: {
               'body': Style(
                   margin: Margins.all(0),

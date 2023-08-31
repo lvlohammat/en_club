@@ -26,36 +26,39 @@ class _ExploreBodyState extends State<ExploreBody> {
             items: items,
           )),
           kDefaultVerticalSizedBox,
-          ExpansionTile(
-            backgroundColor:
-                kDarkColorScheme.secondaryContainer.withOpacity(.5),
-            collapsedBackgroundColor:
-                kDarkColorScheme.secondaryContainer.withOpacity(.5),
-            textColor: kDarkColorScheme.onSecondaryContainer,
-            iconColor: kDarkColorScheme.onSecondaryContainer,
-            collapsedShape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            childrenPadding: const EdgeInsets.symmetric(horizontal: 30),
-            leading: const Icon(
-              Icons.apps_sharp,
-              size: 30,
-            ),
-            title: const Text(
-              'Category',
-              style: TextStyle(fontSize: 25),
-            ),
-            children: const [
-              TagTile(
-                icon: Icons.theater_comedy_rounded,
-                tag: Tag.drama,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: ExpansionTile(
+              backgroundColor:
+                  kDarkColorScheme.secondaryContainer.withOpacity(.5),
+              collapsedBackgroundColor:
+                  kDarkColorScheme.secondaryContainer.withOpacity(.5),
+              textColor: kDarkColorScheme.onSecondaryContainer,
+              iconColor: kDarkColorScheme.onSecondaryContainer,
+              collapsedShape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              childrenPadding: const EdgeInsets.symmetric(horizontal: 30),
+              leading: const Icon(
+                Icons.apps_sharp,
+                size: 23,
               ),
-              TagTile(
-                icon: Icons.work,
-                tag: Tag.business,
+              title: const Text(
+                'Category',
+                style: TextStyle(fontSize: 20),
               ),
-            ],
+              children: const [
+                TagTile(
+                  icon: Icons.theater_comedy_rounded,
+                  tag: Tag.drama,
+                ),
+                TagTile(
+                  icon: Icons.work_rounded,
+                  tag: Tag.business,
+                ),
+              ],
+            ),
           )
         ],
       ),
@@ -79,11 +82,11 @@ class TagTile extends StatelessWidget {
       iconColor: kDarkColorScheme.onSecondaryContainer,
       leading: Icon(
         icon,
-        size: 25,
+        size: 20,
       ),
       title: Text(
         tagToString(tag),
-        style: const TextStyle(fontSize: 20),
+        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
       ),
       onTap: () => Navigator.push(
         context,

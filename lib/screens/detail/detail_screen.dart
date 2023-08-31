@@ -23,12 +23,19 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   int selectedIndex = 0;
   late final AudioHelper _audioPlayer;
+  late String title;
 
   @override
   void initState() {
     super.initState();
     final playerItem = context.read<EnglishItems>().playerItem;
     _audioPlayer = AudioHelper(playerItem!.audioUrl!);
+    final extractedTitle = playerItem.title!;
+    if (extractedTitle.contains(playerItem.name!)) {
+      title = extractedTitle.split('${playerItem.name!}: ')[1];
+    } else {
+      title = 'Part ${playerItem.episode}: $extractedTitle';
+    }
   }
 
   @override
@@ -64,7 +71,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Text(
-                    item.title!,
+                    title,
                     style: const TextStyle(
                         fontSize: 22, fontWeight: FontWeight.w500),
                   ),

@@ -5,13 +5,15 @@ import 'package:english_club/screens/detail/detail_screen.dart';
 import 'package:english_club/screens/initial/initial_screen.dart';
 import 'package:english_club/screens/items/items_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
   await Back4App.init();
-  FlutterNativeSplash.remove();
   runApp(const MyApp());
 }
 
@@ -40,7 +42,7 @@ class MyApp extends StatelessWidget {
                 color: kDarkColorScheme.onBackground,
               ),
               titleLarge: const TextStyle(fontSize: 20)),
-          scaffoldBackgroundColor: kDarkColorScheme.background,
+          scaffoldBackgroundColor: kDarkColorScheme.surface,
           appBarTheme: const AppBarTheme().copyWith(
             backgroundColor: kDarkColorScheme.background,
             foregroundColor: kDarkColorScheme.onBackground,

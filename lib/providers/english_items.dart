@@ -24,7 +24,7 @@ class EnglishItems with ChangeNotifier {
         results
             .map((item) => extractedItems.add(EnglishItem.fromJson(item)))
             .toList();
-        _items = extractedItems;
+        _items = extractedItems.reversed.toList();
         notifyListeners();
       } else {
         throw response.error!;
