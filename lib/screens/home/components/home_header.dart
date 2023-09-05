@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../../constants.dart';
+import '../../../providers/theme_provider.dart';
 
 class HomeHeader extends StatelessWidget {
   const HomeHeader({
@@ -22,6 +23,10 @@ class HomeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final themeProvider = context.read<ThemeProvider>();
+    final lightColorScheme = themeProvider.lightColorScheme;
+    final darkColorScheme = themeProvider.darkColorScheme;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
@@ -48,7 +53,9 @@ class HomeHeader extends StatelessWidget {
                   height: maxWidth * .25,
                   width: maxWidth * .25,
                   decoration: BoxDecoration(
-                    color: kDarkColorScheme.secondaryContainer,
+                    color: isDarkMode
+                        ? darkColorScheme.secondaryContainer
+                        : lightColorScheme.secondaryContainer,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: ClipRRect(
@@ -99,11 +106,14 @@ class HomeHeader extends StatelessWidget {
                 Expanded(
                   child: ListView.builder(
                     itemCount: itemsByName.length,
-                    itemBuilder: (context, idx) => HomeItem(
-                        isSaved: false,
-                        maxWidth: constraints.maxWidth,
-                        maxHight: constraints.maxHeight,
-                        item: itemsByName[idx]),
+                    itemBuilder: (context, idx) => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: HomeItem(
+                          isSaved: false,
+                          maxWidth: constraints.maxWidth,
+                          maxHight: constraints.maxHeight,
+                          item: itemsByName.reversed.toList()[idx]),
+                    ),
                   ),
                 )
               ],

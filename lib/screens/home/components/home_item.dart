@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../../components/item_tile.dart';
 import '../../../constants.dart';
+import '../../../providers/theme_provider.dart';
 
 class HomeItem extends StatefulWidget {
   const HomeItem({
@@ -40,8 +41,14 @@ class _HomeItemState extends State<HomeItem> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final themeProvider = context.read<ThemeProvider>();
+    final lightColorScheme = themeProvider.lightColorScheme;
+    final darkColorScheme = themeProvider.darkColorScheme;
     return InkWell(
-      splashColor: kDarkColorScheme.secondaryContainer,
+      splashColor: isDarkMode
+          ? darkColorScheme.secondaryContainer
+          : lightColorScheme.secondaryContainer,
       onTap: () {
         Navigator.pushNamed(context, DetailScreen.routeName, arguments: {
           'id': widget.item.id,
@@ -72,7 +79,9 @@ class _HomeItemState extends State<HomeItem> {
               'strong': Style(
                   margin: Margins.all(0),
                   fontSize: FontSize(16),
-                  color: kDarkColorScheme.onPrimaryContainer,
+                  color: isDarkMode
+                      ? darkColorScheme.onPrimaryContainer
+                      : lightColorScheme.onPrimaryContainer,
                   fontWeight: FontWeight.normal),
             },
           ),

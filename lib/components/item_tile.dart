@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:english_club/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/english_items.dart';
+import '../providers/theme_provider.dart';
 
 class ItemTile extends StatelessWidget {
   const ItemTile({
@@ -15,6 +15,7 @@ class ItemTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = context.read<ThemeProvider>();
     final savedItems = context.watch<EnglishItems>().savedItems;
     return ListTile(
       contentPadding: const EdgeInsets.all(0),
@@ -23,7 +24,10 @@ class ItemTile extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: kDarkColorScheme.secondaryContainer.withOpacity(.5)),
+              color: themeProvider.isDarkMode
+                  ? themeProvider.darkColorScheme.secondaryContainer
+                  : themeProvider.lightColorScheme.secondaryContainer
+                      .withOpacity(.5)),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: CachedNetworkImage(
@@ -40,8 +44,11 @@ class ItemTile extends StatelessWidget {
       subtitle: Text(
         tagToString(item.tag!)[0].toUpperCase() +
             tagToString(item.tag!).substring(1),
-        style:
-            TextStyle(fontSize: 14, color: kDarkColorScheme.onPrimaryContainer),
+        style: TextStyle(
+            fontSize: 14,
+            color: themeProvider.isDarkMode
+                ? themeProvider.darkColorScheme.onPrimaryContainer
+                : themeProvider.lightColorScheme.onPrimaryContainer),
       ),
       trailing: IconButton(
         onPressed: () {
@@ -51,7 +58,9 @@ class ItemTile extends StatelessWidget {
             savedItems.where((element) => element.id == item.id).isNotEmpty
                 ? Icons.bookmark
                 : Icons.bookmark_border_rounded),
-        color: kDarkColorScheme.primary,
+        color: themeProvider.isDarkMode
+            ? themeProvider.darkColorScheme.primary
+            : themeProvider.lightColorScheme.primary,
       ),
     );
   }

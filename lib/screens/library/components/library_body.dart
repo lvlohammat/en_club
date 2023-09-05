@@ -16,12 +16,18 @@ class LibraryBody extends StatelessWidget {
                 'title': 'Subscription',
                 'items': context.read<EnglishItems>().savedItems
               }),
-          leading: const Icon(Icons.play_arrow_outlined),
+          leading: const Icon(
+            Icons.play_arrow_outlined,
+            size: 25,
+          ),
           title: const Text(
             'Subscription',
             style: TextStyle(fontSize: 22),
           ),
-          trailing: const Icon(Icons.arrow_forward_ios_rounded),
+          trailing: const Icon(
+            Icons.arrow_forward_ios_rounded,
+            size: 20,
+          ),
         ),
         // const Divider(),
         // const ListTile(

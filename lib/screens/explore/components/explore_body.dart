@@ -5,6 +5,8 @@ import 'package:english_club/screens/filtred/filtred_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../providers/theme_provider.dart';
+
 class ExploreBody extends StatefulWidget {
   const ExploreBody({super.key, required this.constraints});
   final BoxConstraints constraints;
@@ -17,6 +19,10 @@ class _ExploreBodyState extends State<ExploreBody> {
   @override
   Widget build(BuildContext context) {
     final items = context.read<EnglishItems>().items;
+    final bool isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final themeProvider = context.read<ThemeProvider>();
+    final lightColorScheme = themeProvider.lightColorScheme;
+    final darkColorScheme = themeProvider.darkColorScheme;
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -29,12 +35,18 @@ class _ExploreBodyState extends State<ExploreBody> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5),
             child: ExpansionTile(
-              backgroundColor:
-                  kDarkColorScheme.secondaryContainer.withOpacity(.5),
-              collapsedBackgroundColor:
-                  kDarkColorScheme.secondaryContainer.withOpacity(.5),
-              textColor: kDarkColorScheme.onSecondaryContainer,
-              iconColor: kDarkColorScheme.onSecondaryContainer,
+              backgroundColor: isDarkMode
+                  ? darkColorScheme.secondaryContainer.withOpacity(.5)
+                  : lightColorScheme.secondaryContainer.withOpacity(.5),
+              collapsedBackgroundColor: isDarkMode
+                  ? darkColorScheme.secondaryContainer.withOpacity(.5)
+                  : lightColorScheme.secondaryContainer.withOpacity(.5),
+              textColor: isDarkMode
+                  ? darkColorScheme.onSecondaryContainer
+                  : lightColorScheme.onSecondaryContainer,
+              iconColor: isDarkMode
+                  ? darkColorScheme.onSecondaryContainer
+                  : lightColorScheme.onSecondaryContainer,
               collapsedShape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
               shape: RoundedRectangleBorder(
@@ -77,9 +89,17 @@ class TagTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDarkMode = context.watch<ThemeProvider>().isDarkMode;
+    final themeProvider = context.read<ThemeProvider>();
+    final lightColorScheme = themeProvider.lightColorScheme;
+    final darkColorScheme = themeProvider.darkColorScheme;
     return ListTile(
-      textColor: kDarkColorScheme.onSecondaryContainer,
-      iconColor: kDarkColorScheme.onSecondaryContainer,
+      textColor: isDarkMode
+          ? darkColorScheme.onSecondaryContainer
+          : lightColorScheme.onSecondaryContainer,
+      iconColor: isDarkMode
+          ? darkColorScheme.onSecondaryContainer
+          : lightColorScheme.onSecondaryContainer,
       leading: Icon(
         icon,
         size: 20,

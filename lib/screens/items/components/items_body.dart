@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:english_club/constants.dart';
 import 'package:english_club/providers/english_items.dart';
+import 'package:english_club/providers/theme_provider.dart';
 import 'package:english_club/screens/home/components/home_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +14,10 @@ class ItemsBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final names = context.watch<EnglishItems>().getNameOfItems(items);
-
+    final themeProvider = context.read<ThemeProvider>();
+    final bool isDarkMode = themeProvider.isDarkMode;
+    final lightColorScheme = themeProvider.lightColorScheme;
+    final darkColorScheme = themeProvider.darkColorScheme;
     return LayoutBuilder(
       builder: (context, constraints) {
         final double maxWidth = constraints.maxWidth;
@@ -59,13 +63,17 @@ class ItemsBody extends StatelessWidget {
                             topRight: Radius.circular(20),
                             bottomLeft: Radius.circular(10),
                           ),
-                          color: kDarkColorScheme.secondaryContainer
-                              .withOpacity(.8)),
+                          color: isDarkMode
+                              ? darkColorScheme.secondaryContainer
+                              : lightColorScheme.secondaryContainer
+                                  .withOpacity(.8)),
                       child: Text(
                         names[index],
                         style: TextStyle(
                             fontSize: 22,
-                            color: kDarkColorScheme.onSecondaryContainer),
+                            color: isDarkMode
+                                ? darkColorScheme.onSecondaryContainer
+                                : lightColorScheme.onSecondaryContainer),
                       ),
                     ),
                   )
@@ -110,11 +118,14 @@ class ItemsBody extends StatelessWidget {
               Expanded(
                 child: ListView.builder(
                   itemCount: itemsByName.length,
-                  itemBuilder: (context, idx) => HomeItem(
-                      isSaved: isSaved,
-                      maxWidth: constraints.maxWidth,
-                      maxHight: constraints.maxHeight,
-                      item: itemsByName[idx]),
+                  itemBuilder: (context, idx) => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: HomeItem(
+                        isSaved: isSaved,
+                        maxWidth: constraints.maxWidth,
+                        maxHight: constraints.maxHeight,
+                        item: itemsByName.reversed.toList()[idx]),
+                  ),
                 ),
               )
             ],

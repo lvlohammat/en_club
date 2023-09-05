@@ -1,7 +1,7 @@
+import 'package:english_club/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../constants.dart';
 import '../providers/english_items.dart';
 import '../screens/detail/detail_screen.dart';
 
@@ -21,13 +21,21 @@ class CustomTileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = context.read<ThemeProvider>();
     return ExpansionTile(
       initiallyExpanded: isExpanded ?? false,
-      backgroundColor: kDarkColorScheme.secondaryContainer.withOpacity(.5),
-      collapsedBackgroundColor:
-          kDarkColorScheme.secondaryContainer.withOpacity(.5),
-      textColor: kDarkColorScheme.onSecondaryContainer,
-      iconColor: kDarkColorScheme.onSecondaryContainer,
+      backgroundColor: themeProvider.isDarkMode
+          ? themeProvider.darkColorScheme.secondaryContainer.withOpacity(.5)
+          : themeProvider.lightColorScheme.secondaryContainer.withOpacity(.5),
+      collapsedBackgroundColor: themeProvider.isDarkMode
+          ? themeProvider.darkColorScheme.secondaryContainer.withOpacity(.5)
+          : themeProvider.lightColorScheme.secondaryContainer.withOpacity(.5),
+      textColor: themeProvider.isDarkMode
+          ? themeProvider.darkColorScheme.onSecondaryContainer
+          : themeProvider.lightColorScheme.onSecondaryContainer,
+      iconColor: themeProvider.isDarkMode
+          ? themeProvider.darkColorScheme.onSecondaryContainer
+          : themeProvider.lightColorScheme.onSecondaryContainer,
       collapsedShape:
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

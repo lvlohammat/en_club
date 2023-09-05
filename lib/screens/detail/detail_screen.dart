@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import '../../components/html_viewer.dart';
 import '../../components/item_tile.dart';
 import '../../constants.dart';
+import '../../providers/theme_provider.dart';
 import 'components/custom_play_button.dart';
 
 class DetailScreen extends StatefulWidget {
@@ -51,7 +52,7 @@ class _DetailScreenState extends State<DetailScreen> {
     final item = context
         .read<EnglishItems>()
         .findById(recivedItemDatas['id'], recivedItemDatas['isSaved']);
-
+    final themeProvider = context.read<ThemeProvider>();
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -85,19 +86,30 @@ class _DetailScreenState extends State<DetailScreen> {
                       CustomPlayButton(
                           audioPlayer: _audioPlayer, isShorten: false),
                       CupertinoSlidingSegmentedControl(
-                        backgroundColor: kDarkColorScheme.surface,
-                        thumbColor:
-                            kDarkColorScheme.primaryContainer.withOpacity(0.5),
+                        backgroundColor: themeProvider.isDarkMode
+                            ? themeProvider.darkColorScheme.surface
+                            : themeProvider.lightColorScheme.surface,
+                        thumbColor: themeProvider.isDarkMode
+                            ? themeProvider.darkColorScheme.secondaryContainer
+                            : themeProvider.lightColorScheme.secondaryContainer,
                         children: {
                           0: Text(
                             'Script',
                             style: TextStyle(
-                                color: kDarkColorScheme.onSecondaryContainer),
+                                color: themeProvider.isDarkMode
+                                    ? themeProvider
+                                        .darkColorScheme.onSecondaryContainer
+                                    : themeProvider
+                                        .lightColorScheme.onSecondaryContainer),
                           ),
                           1: Text(
-                            'Lesson',
+                            'Notes',
                             style: TextStyle(
-                                color: kDarkColorScheme.onSecondaryContainer),
+                                color: themeProvider.isDarkMode
+                                    ? themeProvider
+                                        .darkColorScheme.onSecondaryContainer
+                                    : themeProvider
+                                        .lightColorScheme.onSecondaryContainer),
                           )
                         },
                         groupValue: selectedIndex,
@@ -119,8 +131,12 @@ class _DetailScreenState extends State<DetailScreen> {
                     text: item.story,
                     fontSize: 18,
                     maxLine: 100,
-                    normalColor: kDarkColorScheme.primary,
-                    boldColor: kDarkColorScheme.primary,
+                    normalColor: themeProvider.isDarkMode
+                        ? themeProvider.darkColorScheme.primary
+                        : themeProvider.lightColorScheme.primary,
+                    boldColor: themeProvider.isDarkMode
+                        ? themeProvider.darkColorScheme.primary
+                        : themeProvider.lightColorScheme.primary,
                   ),
                 ),
                 kDefaultVerticalSizedBox,
@@ -130,14 +146,21 @@ class _DetailScreenState extends State<DetailScreen> {
                       const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      color:
-                          kDarkColorScheme.secondaryContainer.withOpacity(.5)),
+                      color: themeProvider.isDarkMode
+                          ? themeProvider.darkColorScheme.secondaryContainer
+                              .withOpacity(.5)
+                          : themeProvider.lightColorScheme.secondaryContainer
+                              .withOpacity(.5)),
                   child: HtmlTextViewer(
                     text: selectedIndex == 0 ? item.script : item.lesson,
                     fontSize: 25,
                     maxLine: 100,
-                    normalColor: kDarkColorScheme.onSecondaryContainer,
-                    boldColor: kDarkColorScheme.primary,
+                    normalColor: themeProvider.isDarkMode
+                        ? themeProvider.darkColorScheme.onSecondaryContainer
+                        : themeProvider.lightColorScheme.onSecondaryContainer,
+                    boldColor: themeProvider.isDarkMode
+                        ? themeProvider.darkColorScheme.primary
+                        : themeProvider.lightColorScheme.primary,
                   ),
                 ),
               ],
@@ -146,9 +169,11 @@ class _DetailScreenState extends State<DetailScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: kDarkColorScheme.secondaryContainer,
+        backgroundColor: themeProvider.isDarkMode
+            ? themeProvider.darkColorScheme.secondaryContainer
+            : themeProvider.lightColorScheme.secondaryContainer,
         onPressed: () {
-          showPreviewPlayer(context, item);
+          showPreviewPlayer(context, item, themeProvider);
         },
         child: ValueListenableBuilder<ButtonState>(
           valueListenable: _audioPlayer.buttonNotifier,
@@ -171,10 +196,13 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
-  Future<dynamic> showPreviewPlayer(BuildContext context, EnglishItem item) {
+  Future<dynamic> showPreviewPlayer(
+      BuildContext context, EnglishItem item, ThemeProvider themeProvider) {
     return showModalBottomSheet(
       showDragHandle: true,
-      backgroundColor: kDarkColorScheme.surface,
+      backgroundColor: themeProvider.isDarkMode
+          ? themeProvider.darkColorScheme.surface
+          : themeProvider.lightColorScheme.surface,
       context: context,
       builder: (context) => Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -198,7 +226,9 @@ class _DetailScreenState extends State<DetailScreen> {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                  color: kDarkColorScheme.onSurface,
+                  color: themeProvider.isDarkMode
+                      ? themeProvider.darkColorScheme.onSurface
+                      : themeProvider.lightColorScheme.onSurface,
                   fontSize: 20,
                   fontWeight: FontWeight.w500),
             ),
@@ -206,16 +236,23 @@ class _DetailScreenState extends State<DetailScreen> {
           Text(
             tagToString(item.tag!),
             style: TextStyle(
-                color: kDarkColorScheme.onSurface, fontWeight: FontWeight.w300),
+                color: themeProvider.isDarkMode
+                    ? themeProvider.darkColorScheme.onSurface
+                    : themeProvider.lightColorScheme.onSurface,
+                fontWeight: FontWeight.w300),
           ),
           ValueListenableBuilder<ProgressBarState>(
             valueListenable: _audioPlayer.progressNotifier,
-            builder: (context, value, child) => ProgressBar(
-              progress: value.current,
-              total: value.total,
-              buffered: value.buffered,
-              timeLabelLocation: TimeLabelLocation.sides,
-              onSeek: _audioPlayer.seek,
+            builder: (context, value, child) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: ProgressBar(
+                progress: value.current,
+                total: value.total,
+                buffered: value.buffered,
+                timeLabelLocation: TimeLabelLocation.sides,
+                timeLabelPadding: 3,
+                onSeek: _audioPlayer.seek,
+              ),
             ),
           ),
           Row(
@@ -223,7 +260,7 @@ class _DetailScreenState extends State<DetailScreen> {
             children: [
               IconButton(
                 onPressed: () {
-                  // _audioPlayer.seek();
+                  _audioPlayer.seekBackward();
                 },
                 icon: const Icon(
                   Icons.replay_5,
@@ -235,7 +272,9 @@ class _DetailScreenState extends State<DetailScreen> {
                 isShorten: true,
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  _audioPlayer.seekForward();
+                },
                 icon: const Icon(
                   Icons.forward_5,
                   size: 30,

@@ -1,5 +1,5 @@
-import 'package:english_club/constants.dart';
 import 'package:english_club/helpers/back4app.dart';
+import 'package:english_club/providers/theme_provider.dart';
 import 'package:english_club/providers/english_items.dart';
 import 'package:english_club/screens/detail/detail_screen.dart';
 import 'package:english_club/screens/initial/initial_screen.dart';
@@ -27,35 +27,44 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<EnglishItems>(
           create: (context) => EnglishItems(),
         ),
-      ],
-      child: MaterialApp(
-        title: 'English Club',
-        debugShowCheckedModeBanner: false,
-        themeMode: ThemeMode.dark,
-        darkTheme: ThemeData.dark().copyWith(
-          useMaterial3: true,
-          progressIndicatorTheme: ProgressIndicatorThemeData(
-              color: kDarkColorScheme.onSecondaryContainer),
-          textTheme: const TextTheme().copyWith(
-              bodyMedium: TextStyle(
-                fontSize: 16,
-                color: kDarkColorScheme.onBackground,
-              ),
-              titleLarge: const TextStyle(fontSize: 20)),
-          scaffoldBackgroundColor: kDarkColorScheme.surface,
-          appBarTheme: const AppBarTheme().copyWith(
-            backgroundColor: kDarkColorScheme.background,
-            foregroundColor: kDarkColorScheme.onBackground,
-            centerTitle: true,
-          ),
-          colorScheme: kDarkColorScheme,
+        ChangeNotifierProvider<ThemeProvider>(
+          create: (context) => ThemeProvider(),
         ),
-        home: const InitialScreen(),
-        routes: {
-          DetailScreen.routeName: (context) => const DetailScreen(),
-          ItemsScreen.routeName: (context) => const ItemsScreen(),
-          InitialScreen.routeName: (context) => const InitialScreen(),
-        },
+      ],
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeDatas, child) => MaterialApp(
+          title: 'English Club',
+          debugShowCheckedModeBanner: false,
+          // themeMode: ThemeMode.dark,
+          // darkTheme: ThemeData.dark().copyWith(
+          //   useMaterial3: true,
+          //   progressIndicatorTheme: ProgressIndicatorThemeData(
+          //       color: kDarkColorScheme.onSecondaryContainer),
+          //   textTheme: const TextTheme().copyWith(
+          //       bodyMedium: TextStyle(
+          //         fontSize: 16,
+          //         color: kDarkColorScheme.onBackground,
+          //       ),
+          //       titleLarge: const TextStyle(fontSize: 20)),
+          //   scaffoldBackgroundColor: kDarkColorScheme.surface,
+          //   appBarTheme: const AppBarTheme().copyWith(
+          //     backgroundColor: kDarkColorScheme.background,
+          //     foregroundColor: kDarkColorScheme.onBackground,
+          //     centerTitle: true,
+          //   ),
+          //   colorScheme: kDarkColorScheme,
+          // ),
+
+          themeMode: themeDatas.themeMode,
+          darkTheme: MyThemes.darkTheme,
+          theme: MyThemes.lightTheme,
+          home: const InitialScreen(),
+          routes: {
+            DetailScreen.routeName: (context) => const DetailScreen(),
+            ItemsScreen.routeName: (context) => const ItemsScreen(),
+            InitialScreen.routeName: (context) => const InitialScreen(),
+          },
+        ),
       ),
     );
   }
