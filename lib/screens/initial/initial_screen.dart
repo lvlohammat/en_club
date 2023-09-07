@@ -1,3 +1,5 @@
+import 'package:english_club/constants.dart';
+import 'package:english_club/providers/theme_provider.dart';
 import 'package:english_club/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -33,11 +35,22 @@ class _InitialScreenState extends State<InitialScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  const Spacer(),
                   Image.asset(
                     'assets/images/cat.gif',
                     fit: BoxFit.cover,
                   ),
                   const CircularProgressIndicator(),
+                  const Spacer(),
+                  Text(
+                    'Created by lvlohammat',
+                    style: TextStyle(
+                        color: context
+                            .read<ThemeProvider>()
+                            .darkColorScheme
+                            .onSecondaryContainer),
+                  ),
+                  kDefaultVerticalSizedBox
                 ],
               ),
             );

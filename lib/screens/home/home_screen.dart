@@ -30,13 +30,24 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: _currentIndex == 1
           ? null
           : AppBar(
-              title: const Text('English Club'),
+              title: Text(
+                'English Club',
+                style: TextStyle(
+                    color: isDarkMode
+                        ? darkColorScheme.onSecondaryContainer
+                        : lightColorScheme.onSecondaryContainer),
+              ),
               actions: [
                 IconButton(
                   onPressed: () {
                     context.read<ThemeProvider>().toggleThemeMode();
                   },
-                  icon: Icon(isDarkMode ? Icons.nightlight_round : Icons.sunny),
+                  icon: Icon(
+                    isDarkMode ? Icons.mode_night_rounded : Icons.sunny,
+                    color: isDarkMode
+                        ? darkColorScheme.onSecondaryContainer
+                        : lightColorScheme.onSecondaryContainer,
+                  ),
                 )
               ],
             ),

@@ -6,12 +6,12 @@ class ThemeProvider with ChangeNotifier {
   bool isDarkMode = true;
 
   final ColorScheme darkColorScheme = ColorScheme.fromSeed(
-    seedColor: Colors.blueAccent,
+    seedColor: Colors.green,
     brightness: Brightness.dark,
   );
 
   final ColorScheme lightColorScheme = ColorScheme.fromSeed(
-    seedColor: Colors.blueAccent,
+    seedColor: Colors.green,
   );
 
   void toggleThemeMode() {
@@ -34,8 +34,8 @@ class MyThemes {
         titleLarge: const TextStyle(fontSize: 20)),
     scaffoldBackgroundColor: ThemeProvider().darkColorScheme.surface,
     appBarTheme: const AppBarTheme().copyWith(
-      backgroundColor: ThemeProvider().darkColorScheme.background,
-      foregroundColor: ThemeProvider().darkColorScheme.onBackground,
+      backgroundColor: ThemeProvider().darkColorScheme.surface,
+      foregroundColor: ThemeProvider().darkColorScheme.onSecondaryContainer,
       centerTitle: true,
     ),
     colorScheme: ThemeProvider().darkColorScheme,
@@ -50,10 +50,10 @@ class MyThemes {
           color: ThemeProvider().lightColorScheme.onBackground,
         ),
         titleLarge: const TextStyle(fontSize: 20)),
-    scaffoldBackgroundColor: ThemeProvider().lightColorScheme.background,
+    scaffoldBackgroundColor: ThemeProvider().lightColorScheme.surface,
     appBarTheme: const AppBarTheme().copyWith(
-      backgroundColor: ThemeProvider().lightColorScheme.background,
-      foregroundColor: ThemeProvider().lightColorScheme.onBackground,
+      backgroundColor: ThemeProvider().lightColorScheme.surface,
+      foregroundColor: ThemeProvider().lightColorScheme.onSecondaryContainer,
       centerTitle: true,
     ),
     colorScheme: ThemeProvider().lightColorScheme,

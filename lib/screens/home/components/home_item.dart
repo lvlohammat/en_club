@@ -66,7 +66,12 @@ class _HomeItemState extends State<HomeItem> {
             title,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+            style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 18,
+                color: isDarkMode
+                    ? darkColorScheme.onSecondaryContainer
+                    : lightColorScheme.onSecondaryContainer),
           ),
           Html(
             data: widget.item.story!,
